@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculate Price</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white p-8 rounded shadow-md w-full max-w-md">
+    <h1 class="text-2xl font-semibold mb-6 text-center">Calculate Delivery Price</h1>
+    
+    <form id="priceForm" class="space-y-4">
+      <div>
+        <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
+        <input type="date" id="date" name="date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+      </div>
+      <div>
+        <label for="total_distance_km" class="block text-sm font-medium text-gray-700">Total Distance (km)</label>
+        <input type="number" step="0.1" id="total_distance_km" name="total_distance_km" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+      </div>
+      <div>
+        <label for="total_time_minutes" class="block text-sm font-medium text-gray-700">Total Time (minutes)</label>
+        <input type="number" id="total_time_minutes" name="total_time_minutes" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+      </div>
+      <div>
+        <label for="wait_time_minutes" class="block text-sm font-medium text-gray-700">Wait Time (minutes)</label>
+        <input type="number" id="wait_time_minutes" name="wait_time_minutes" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" required>
+      </div>
+      <div>
+        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">Calculate Price</button>
+      </div>
+    </form>
+
+    <pre id="result" class="mt-6 bg-gray-100 p-4 rounded text-sm text-gray-800 whitespace-pre-wrap"></pre>
+  </div>
+
+  <script>
+    document.getElementById('priceForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const data = {
+        date: document.getElementById('date').value,
+        total_distance_km: parseFloat(document.getElementById('total_distance_km').value),
+        total_time_minutes: parseInt(document.getElementById('total_time_minutes').value),
+        wait_time_minutes: parseInt(document.getElementById('wait_time_minutes').value)
+      };
+
+      fetch("http://localhost:8000/api/simple-price/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("result").innerText = JSON.stringify(data, null, 2);
+      })
+      .catch(err => {
+        document.getElementById("result").innerText = "Error: " + err.message;
+      });
+    });
+  </script>
+</body>
+</html>
