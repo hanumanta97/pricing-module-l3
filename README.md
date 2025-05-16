@@ -55,4 +55,4 @@ Pricing is broken down into the following components:
 ---
 
 ## 🧮 Price Calculation Formula
-
+-$Price = (DBP + (Dn * DAP)) + (Tn * TMF) + WC$) s
